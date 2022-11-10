@@ -24,6 +24,13 @@ async function run(){
             const services = await cursor.limit(3).toArray();
             res.send(services)
         })
+
+        app.post('/services', async(req, res)=> {
+            const service = req.body;
+            const result = await serviceCollection.insertOne(service)
+            res.send(result)
+        })
+        
         app.get('/services', async(req, res) => {
             const query = {};
             const cursor = serviceCollection.find(query);
@@ -39,6 +46,19 @@ async function run(){
             res.send(service);
             
         })
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         // app.get('/reviews', async(req, res)=> {
         //     let query = {};
@@ -59,7 +79,6 @@ async function run(){
             res.send(result);
         });
 
-    
 
 
         app.get('/review', async(req, res)=>{
