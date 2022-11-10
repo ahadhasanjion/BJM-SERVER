@@ -9,7 +9,7 @@ app.use(cors());
 app.use(express.json());
 
 
-const uri = `mongodb+srv://${process.env.DB_User}:${process.env.DB_Password}@cluster0.k5l2a3d.mongodb.net/?retryWrites=true&w=majority`;
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.k5l2a3d.mongodb.net/?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
 async function run(){
@@ -40,21 +40,43 @@ async function run(){
             
         })
 
+        // app.get('/reviews', async(req, res)=> {
+        //     let query = {};
+        //     console.log(req.query)
+        //     if(req.query.serviceId){
+        //         query = {
+        //              name :req.query.serviceId
+        //         }
+        //     }
+        //     const cursor =  reviewCollection.find(query)
+        //     const result =  await cursor.toArray()
+        //     res.send(result)
+        // })
+
         app.post('/reviews', async(req, res)=> {
             const review = req.body;
             const result= await reviewCollection.insertOne(review);
             res.send(result);
         });
 
+    
 
-        app.get('/reviews', async(req, res)=>{
-            const query = {}
+
+        app.get('/review', async(req, res)=>{
+            let query = {}
+            if(req.query.service_id){
+                query={
+                    service_id : req.query.service_id
+                }
+            }
             const cursor = reviewCollection.find(query);
             const reviews = await cursor.toArray();
             res.send(reviews)
-
         })
 
+        
+
+        //service client revies
         app.get('/reviews', async(req, res)=>{
     
             let query = {};
@@ -69,6 +91,7 @@ async function run(){
             res.send(reviews)
         })
 
+
         app.delete('/reviews/:id', async(req, res) => {
             const id = req.params.id;
             const query = {_id: ObjectId(id)}
@@ -76,6 +99,19 @@ async function run(){
             res.send(result);
 
         })
+        // app.get('/service', async(req, res)=>{
+    
+        //     let query = {};
+        //     if(req.query.email){
+        //         query={
+        //             email: req.query.email
+        //         }
+        //     }
+
+        //     const cursor = reviewCollection.find(query);
+        //     const reviews = await cursor.toArray();
+        //     res.send(reviews)
+        // })
 
     }
     finally{}
